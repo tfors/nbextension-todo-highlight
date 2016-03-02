@@ -1,0 +1,5 @@
+/* highlight TODO/FIXME keywords in comments */
+ div.code_cell .cm-comment.cm-cm-overlay.cm-highlight {
+     background-color: rgba(255, 255, 0, 0.6);
+ }
+ 

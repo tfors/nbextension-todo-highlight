@@ -1,9 +1,9 @@
 {
-  "name": "nbextension-scratchpad",
+  "name": "nbextension-todo-highlight",
   "authors": [
-    "Min RK <benjaminrk@gmail.com>"
+    "Thomas Fors <tom@fors.net>"
   ],
-  "description": "scratchpad extension for jupyter notebook",
+  "description": "todo comment highlighting extension for jupyter notebook",
   "main": "main.js",
   "moduleType": [
     "amd"
@@ -13,7 +13,7 @@
     "nbextension"
   ],
   "license": "BSD",
-  "homepage": "https://github.com/minrk/nbextension-scratchpad",
+  "homepage": "https://github.com/tfors/nbextension-todo-highlight",
   "ignore": [
     "**/.*",
     "node_modules",
