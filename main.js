@@ -1,11 +1,7 @@
 define(['require'], function (require) {
   "use strict";
-  var $ = require('jquery');
   var Jupyter = require('base/js/namespace');
-  var events = require('base/js/events');
-  var utils = require('base/js/utils');
   var CodeCell = require('notebook/js/codecell').CodeCell;
-  var CodeMirror = require('codemirror/lib/codemirror');
 
   var todoHighlightOverlay = {
     token: function(stream) {
@@ -21,19 +17,19 @@ define(['require'], function (require) {
     }
   };
 
-  var Todo = function (nb) {
-    var todo = this;
-    this.notebook = nb;
-
-    console.log(CodeCell.code_mirror);
-    CodeCell.prototype.create_element.code_mirror.addOverlay(todoHighlightOverlay);
-
-  };
-
   function setup_todo () {
-    // lazy, hook it up to Jupyter.notebook as the handle on all the singletons
-    console.log("Setting up todo extension");
-    return new Todo(Jupyter.notebook);
+    // Add overlay to future CodeCells
+    var old_create_element = CodeCell.prototype.create_element;
+    CodeCell.prototype.create_element = function () {
+      old_create_element.apply(this, arguments);
+      this.code_mirror.addOverlay(todoHighlightOverlay);
+    }
+
+    // Add overlay to all existing CodeCells
+    Jupyter.notebook.get_cells().map( function(cell) {
+      if (cell.cell_type == 'code') { cell.code_mirror.addOverlay(todoHighlightOverlay); }
+      return cell;
+    });
   }
 
   function load_extension () {
@@ -43,15 +39,11 @@ define(['require'], function (require) {
     link.rel = "stylesheet";
     link.href = require.toUrl("./todo.css");
     document.getElementsByTagName("head")[0].appendChild(link);
-    // load when the kernel's ready
-    if (Jupyter.notebook.kernel) {
-      setup_todo();
-    } else {
-      events.on('kernel_ready.Kernel', setup_todo);
-    }
+
+    setup_todo();
   }
 
   return {
-    load_ipython_extension: load_extension,
+    load_ipython_extension: load_extension
   };
 });
